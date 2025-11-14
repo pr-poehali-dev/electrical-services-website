@@ -13,36 +13,22 @@ const Index = () => {
   };
 
   const services = [
-    {
-      icon: 'Zap',
-      title: 'Электромонтаж',
-      description: 'Профессиональный монтаж электропроводки в квартирах, домах и офисах'
-    },
-    {
-      icon: 'Lightbulb',
-      title: 'Освещение',
-      description: 'Установка и подключение светильников, люстр, светодиодных систем'
-    },
-    {
-      icon: 'Power',
-      title: 'Силовые линии',
-      description: 'Монтаж розеток, выключателей, электрощитов и автоматики'
-    },
-    {
-      icon: 'Shield',
-      title: 'Безопасность',
-      description: 'Установка УЗО, дифавтоматов, заземление и молниезащита'
-    },
-    {
-      icon: 'Settings',
-      title: 'Ремонт и обслуживание',
-      description: 'Диагностика, ремонт и модернизация электросетей'
-    },
-    {
-      icon: 'Clock',
-      title: 'Срочный выезд',
-      description: 'Экстренные работы 24/7, устранение аварийных ситуаций'
-    }
+    'Монтаж и замена розеток, выключателей',
+    'Установка и подключение люстр, светильников',
+    'Монтаж электрощитов и автоматики',
+    'Прокладка электропроводки',
+    'Замена счетчиков электроэнергии',
+    'Подключение электроплит и духовых шкафов',
+    'Установка УЗО и дифавтоматов',
+    'Монтаж заземления',
+    'Штробление стен под проводку',
+    'Диагностика и ремонт электросетей',
+    'Устранение короткого замыкания',
+    'Подключение кондиционеров',
+    'Монтаж систем видеонаблюдения',
+    'Установка домофонов',
+    'Электромонтаж под ключ',
+    'Аварийный вызов 24/7'
   ];
 
   const prices = [
@@ -53,7 +39,7 @@ const Index = () => {
     { service: 'Замена электропроводки (1-комн.)', price: 'от 15000 ₽' },
     { service: 'Диагностика неисправностей', price: 'от 1000 ₽' },
     { service: 'Подключение электроплиты', price: 'от 2000 ₽' },
-    { service: 'Срочный выезд (в течение часа)', price: 'от 1500 ₽' }
+    { service: 'Выезд электрика', price: 'Бесплатно' }
   ];
 
   const reviews = [
@@ -180,23 +166,19 @@ const Index = () => {
           <p className="text-center text-muted-foreground mb-12 text-lg">
             Полный спектр электромонтажных работ для дома и офиса
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {services.map((service, index) => (
-              <Card 
-                key={index} 
-                className="hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 hover:-translate-y-1 bg-card border-border"
-              >
-                <CardHeader>
-                  <div className="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                    <Icon name={service.icon as any} className="text-primary" size={28} />
-                  </div>
-                  <CardTitle className="text-xl">{service.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-base">{service.description}</CardDescription>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="max-w-3xl mx-auto">
+            <Card className="bg-card border-border">
+              <CardContent className="p-8">
+                <ul className="space-y-3">
+                  {services.map((service, index) => (
+                    <li key={index} className="flex items-start">
+                      <Icon name="Zap" className="text-primary mr-3 mt-1 flex-shrink-0" size={20} />
+                      <span className="text-foreground text-base">{service}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
