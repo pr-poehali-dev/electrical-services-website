@@ -1,15 +1,64 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { useToast } from '@/hooks/use-toast';
 import Icon from '@/components/ui/icon';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [formData, setFormData] = useState({ name: '', phone: '', message: '' });
+  const [calculatorData, setCalculatorData] = useState({ service: '', rooms: '1', area: '' });
+  const [calculatedPrice, setCalculatedPrice] = useState<string | null>(null);
+  const { toast } = useToast();
 
   const scrollToSection = (id: string) => {
     setActiveSection(id);
+    setMobileMenuOpen(false);
     const element = document.getElementById(id);
     element?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    toast({
+      title: "Заявка отправлена!",
+      description: "Мы свяжемся с вами в ближайшее время.",
+    });
+    setFormData({ name: '', phone: '', message: '' });
+  };
+
+  const calculatePrice = () => {
+    if (!calculatorData.service || !calculatorData.rooms) {
+      toast({
+        title: "Заполните все поля",
+        description: "Выберите тип работ и количество комнат",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const basePrice: { [key: string]: number } = {
+      'socket': 500,
+      'lighting': 800,
+      'wiring': 15000,
+      'panel': 3500,
+      'repair': 2000
+    };
+
+    const roomMultiplier = parseInt(calculatorData.rooms);
+    const price = basePrice[calculatorData.service] * roomMultiplier;
+    setCalculatedPrice(`${price.toLocaleString()} ₽`);
+    
+    toast({
+      title: "Расчёт готов!",
+      description: `Примерная стоимость: ${price.toLocaleString()} ₽`,
+    });
   };
 
   const services = [
@@ -104,13 +153,62 @@ const Index = () => {
                 Контакты
               </button>
             </div>
-            <Button 
-              onClick={() => scrollToSection('contacts')}
-              className="bg-secondary hover:bg-secondary/90"
-            >
-              <Icon name="Phone" size={18} className="mr-2" />
-              Заказать звонок
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button 
+                onClick={() => scrollToSection('contacts')}
+                className="bg-secondary hover:bg-secondary/90 hidden sm:flex"
+              >
+                <Icon name="Phone" size={18} className="mr-2" />
+                Заказать звонок
+              </Button>
+              <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="icon" className="md:hidden">
+                    <Icon name="Menu" size={24} />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-[300px]">
+                  <div className="flex flex-col gap-6 mt-8">
+                    <button 
+                      onClick={() => scrollToSection('home')}
+                      className="text-left text-lg hover:text-primary transition-colors"
+                    >
+                      Главное
+                    </button>
+                    <button 
+                      onClick={() => scrollToSection('services')}
+                      className="text-left text-lg hover:text-primary transition-colors"
+                    >
+                      Услуги
+                    </button>
+                    <button 
+                      onClick={() => scrollToSection('calculator')}
+                      className="text-left text-lg hover:text-primary transition-colors"
+                    >
+                      Калькулятор
+                    </button>
+                    <button 
+                      onClick={() => scrollToSection('prices')}
+                      className="text-left text-lg hover:text-primary transition-colors"
+                    >
+                      Прайс
+                    </button>
+                    <button 
+                      onClick={() => scrollToSection('reviews')}
+                      className="text-left text-lg hover:text-primary transition-colors"
+                    >
+                      Отзывы
+                    </button>
+                    <button 
+                      onClick={() => scrollToSection('contacts')}
+                      className="text-left text-lg hover:text-primary transition-colors"
+                    >
+                      Контакты
+                    </button>
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
           </div>
         </div>
       </nav>
@@ -180,6 +278,74 @@ const Index = () => {
               </CardContent>
             </Card>
           </div>
+        </div>
+      </section>
+
+      <section id="calculator" className="py-20 px-4">
+        <div className="container mx-auto max-w-3xl">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">Калькулятор стоимости</h2>
+          <p className="text-center text-muted-foreground mb-12 text-lg">
+            Рассчитайте примерную стоимость работ
+          </p>
+          <Card className="bg-card border-border">
+            <CardContent className="p-8">
+              <div className="space-y-6">
+                <div>
+                  <Label htmlFor="service" className="text-base mb-2 block">Тип работ</Label>
+                  <Select 
+                    value={calculatorData.service} 
+                    onValueChange={(value) => setCalculatorData({...calculatorData, service: value})}
+                  >
+                    <SelectTrigger id="service" className="w-full">
+                      <SelectValue placeholder="Выберите тип работ" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="socket">Монтаж розеток/выключателей</SelectItem>
+                      <SelectItem value="lighting">Установка освещения</SelectItem>
+                      <SelectItem value="wiring">Замена проводки</SelectItem>
+                      <SelectItem value="panel">Монтаж электрощита</SelectItem>
+                      <SelectItem value="repair">Ремонт и диагностика</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor="rooms" className="text-base mb-2 block">Количество комнат</Label>
+                  <Select 
+                    value={calculatorData.rooms} 
+                    onValueChange={(value) => setCalculatorData({...calculatorData, rooms: value})}
+                  >
+                    <SelectTrigger id="rooms" className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">1 комната</SelectItem>
+                      <SelectItem value="2">2 комнаты</SelectItem>
+                      <SelectItem value="3">3 комнаты</SelectItem>
+                      <SelectItem value="4">4 комнаты</SelectItem>
+                      <SelectItem value="5">5+ комнат</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <Button 
+                  onClick={calculatePrice} 
+                  className="w-full bg-primary hover:bg-primary/90 text-lg py-6"
+                >
+                  <Icon name="Calculator" size={20} className="mr-2" />
+                  Рассчитать стоимость
+                </Button>
+
+                {calculatedPrice && (
+                  <div className="text-center p-6 bg-primary/10 rounded-lg border border-primary/20">
+                    <p className="text-muted-foreground mb-2">Примерная стоимость:</p>
+                    <p className="text-3xl font-bold text-primary">{calculatedPrice}</p>
+                    <p className="text-sm text-muted-foreground mt-2">* Точная стоимость после осмотра</p>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
@@ -300,7 +466,55 @@ const Index = () => {
             </Card>
           </div>
 
-          <div className="mt-12">
+          <div className="mt-16">
+            <Card className="bg-card border-border text-left">
+              <CardHeader>
+                <CardTitle className="text-2xl text-center">Обратная связь</CardTitle>
+                <CardDescription className="text-center">Оставьте заявку и мы свяжемся с вами</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div>
+                    <Label htmlFor="name">Ваше имя</Label>
+                    <Input 
+                      id="name" 
+                      placeholder="Иван Иванов"
+                      value={formData.name}
+                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="phone">Телефон</Label>
+                    <Input 
+                      id="phone" 
+                      type="tel"
+                      placeholder="+7 (900) 123-45-67"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="message">Сообщение</Label>
+                    <Textarea 
+                      id="message" 
+                      placeholder="Опишите какие работы вас интересуют..."
+                      value={formData.message}
+                      onChange={(e) => setFormData({...formData, message: e.target.value})}
+                      rows={4}
+                    />
+                  </div>
+                  <Button type="submit" className="w-full bg-primary hover:bg-primary/90">
+                    <Icon name="Send" size={18} className="mr-2" />
+                    Отправить заявку
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="mt-8">
             <Button 
               size="lg" 
               className="bg-secondary hover:bg-secondary/90 text-lg px-8"
