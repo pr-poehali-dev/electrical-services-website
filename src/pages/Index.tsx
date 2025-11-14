@@ -84,7 +84,7 @@ const Index = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Icon name="Zap" className="text-primary" size={32} />
-              <span className="text-2xl font-bold">ЭлектроМастер</span>
+              <span className="text-2xl font-bold">ProVolt</span>
             </div>
             <div className="hidden md:flex space-x-6">
               <button 
@@ -273,10 +273,10 @@ const Index = () => {
               </CardHeader>
               <CardContent>
                 <a 
-                  href="tel:+79029340417" 
+                  href="tel:+79029342417" 
                   className="text-xl font-semibold text-primary hover:text-primary/80 transition-colors"
                 >
-                  8 902 934-04-17
+                  8 902 934-24-17
                 </a>
               </CardContent>
             </Card>
@@ -290,7 +290,7 @@ const Index = () => {
               </CardHeader>
               <CardContent>
                 <a 
-                  href="https://wa.me/79029340417" 
+                  href="https://wa.me/79029342417" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-xl font-semibold text-secondary hover:text-secondary/80 transition-colors"
@@ -322,7 +322,7 @@ const Index = () => {
             <Button 
               size="lg" 
               className="bg-secondary hover:bg-secondary/90 text-lg px-8"
-              onClick={() => window.open('https://wa.me/79029340417', '_blank')}
+              onClick={() => window.open('https://wa.me/79029342417', '_blank')}
             >
               <Icon name="MessageCircle" size={20} className="mr-2" />
               Написать в WhatsApp
@@ -335,7 +335,7 @@ const Index = () => {
         <div className="container mx-auto text-center text-muted-foreground">
           <div className="flex items-center justify-center space-x-2 mb-4">
             <Icon name="Zap" className="text-primary" size={24} />
-            <span className="text-xl font-bold text-foreground">ЭлектроМастер</span>
+            <span className="text-xl font-bold text-foreground">ProVolt</span>
           </div>
           <p>© 2024 Все права защищены</p>
           <p className="mt-2">Профессиональные электромонтажные работы</p>
