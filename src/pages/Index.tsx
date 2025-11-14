@@ -91,7 +91,7 @@ const Index = () => {
                 onClick={() => scrollToSection('home')}
                 className={`hover:text-primary transition-colors ${activeSection === 'home' ? 'text-primary' : ''}`}
               >
-                Главная
+                Главное
               </button>
               <button 
                 onClick={() => scrollToSection('services')}
